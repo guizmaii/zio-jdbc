@@ -19,7 +19,6 @@ import zio._
 
 import java.io._
 import java.sql.{ Array => _, _ }
-import java.time._
 import scala.collection.immutable.ListMap
 
 /**
@@ -109,19 +108,19 @@ object JdbcDecoder extends JdbcDecoderLowPriorityImplicits {
   // These `java.time.*` decoders are copied from Quill's 'ObjectGenericTimeDecoders' trait.
   // Note: These decoders probably don't work for SQLite. Quill as a separate trait, named `BasicTimeDecoders` which seems dedicated to SQLite.
   implicit val localDateDecoder: JdbcDecoder[java.time.LocalDate]           =
-    JdbcDecoder(rs => i => rs.getObject(i, classOf[LocalDate]), "java.time.LocalDate")
+    JdbcDecoder(rs => i => rs.getObject(i, classOf[java.time.LocalDate]), "java.time.LocalDate")
   implicit val localTimeDecoder: JdbcDecoder[java.time.LocalTime]           =
-    JdbcDecoder(rs => i => rs.getObject(i, classOf[LocalTime]), "java.time.LocalTime")
+    JdbcDecoder(rs => i => rs.getObject(i, classOf[java.time.LocalTime]), "java.time.LocalTime")
   implicit val localDateTimeDecoder: JdbcDecoder[java.time.LocalDateTime]   =
-    JdbcDecoder(rs => i => rs.getObject(i, classOf[LocalDateTime]), "java.time.LocalDateTime")
+    JdbcDecoder(rs => i => rs.getObject(i, classOf[java.time.LocalDateTime]), "java.time.LocalDateTime")
   implicit val zonedDateTimeDecoder: JdbcDecoder[java.time.ZonedDateTime]   =
-    JdbcDecoder(rs => i => rs.getObject(i, classOf[OffsetDateTime]).toZonedDateTime, "java.time.ZonedDateTime")
+    JdbcDecoder(rs => i => rs.getObject(i, classOf[java.time.OffsetDateTime]).toZonedDateTime, "java.time.ZonedDateTime")
   implicit val instantDecoder: JdbcDecoder[java.time.Instant]               =
-    JdbcDecoder(rs => i => rs.getObject(i, classOf[OffsetDateTime]).toInstant, "java.time.Instant")
+    JdbcDecoder(rs => i => rs.getObject(i, classOf[java.time.OffsetDateTime]).toInstant, "java.time.Instant")
   implicit val offsetTimeDecoder: JdbcDecoder[java.time.OffsetTime]         =
-    JdbcDecoder(rs => i => rs.getObject(i, classOf[OffsetTime]), "java.time.OffsetTime")
+    JdbcDecoder(rs => i => rs.getObject(i, classOf[java.time.OffsetTime]), "java.time.OffsetTime")
   implicit val offsetDateTimeDecoder: JdbcDecoder[java.time.OffsetDateTime] =
-    JdbcDecoder(rs => i => rs.getObject(i, classOf[OffsetDateTime]), "java.time.OffsetDateTime")
+    JdbcDecoder(rs => i => rs.getObject(i, classOf[java.time.OffsetDateTime]), "java.time.OffsetDateTime")
 
   implicit def optionDecoder[A](implicit decoder: JdbcDecoder[A]): JdbcDecoder[Option[A]] =
     JdbcDecoder(rs =>
