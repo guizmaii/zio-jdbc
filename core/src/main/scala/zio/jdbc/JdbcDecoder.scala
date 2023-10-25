@@ -102,6 +102,9 @@ object JdbcDecoder extends JdbcDecoderLowPriorityImplicits {
   implicit val shortDecoder: JdbcDecoder[Short] = JdbcDecoder(_.getShort)
   implicit val floatDecoder: JdbcDecoder[Float] = JdbcDecoder(_.getFloat)
   implicit val byteDecoder: JdbcDecoder[Byte] = JdbcDecoder(_.getByte)
+  implicit val uuidDecoder: JdbcDecoder[java.util.UUID] =
+  // See: https://stackoverflow.com/a/56267754/2431728
+    JdbcDecoder(rs => i => rs.getObject(i, classOf[java.util.UUID]), "UUID")
   implicit val byteArrayDecoder: JdbcDecoder[Array[Byte]] = JdbcDecoder(_.getBytes)
   implicit val blobDecoder: JdbcDecoder[Blob] = JdbcDecoder(_.getBlob)
   implicit val dateDecoder: JdbcDecoder[java.sql.Date] = JdbcDecoder(_.getDate)
@@ -565,7 +568,7 @@ object JdbcDecoder extends JdbcDecoderLowPriorityImplicits {
 trait JdbcDecoderLowPriorityImplicits {
   import zio.schema._
 
-  import java.sql.{ Types => SqlTypes }
+  import java.sql.{Types => SqlTypes}
 
   private def getBinary(binary: InputStream): Chunk[Byte] = {
     val baos = new ByteArrayOutputStream()
